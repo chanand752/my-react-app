@@ -12,6 +12,7 @@ interface LeftSidebarProps {
   onNewChat?: () => void;
   onTextSizeChange?: (size: 'small' | 'medium' | 'large') => void;
   dashboardType: 1 | 2 | 3;
+  onMetricIconClick: () => void
 }
 
 const LeftSidebar = ({ 
@@ -19,6 +20,7 @@ const LeftSidebar = ({
   searchQuery, 
   handleSearch,
   onTextSizeChange,
+  onMetricIconClick,
   dashboardType
 }: LeftSidebarProps) => {
   const [chatTopics, setChatTopics] = useState<ChatTopic[]>([
@@ -327,6 +329,7 @@ const LeftSidebar = ({
         activeDashboard={dashboardType} 
         textSize={textSize} 
         handleTextSizeChange={handleTextSizeChange} 
+        onMetricIconClick={onMetricIconClick}
       />
       <SidebarContent 
         collapsed={collapsed}

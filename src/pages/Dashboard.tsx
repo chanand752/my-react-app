@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -76,6 +77,7 @@ const Dashboard: React.FC<DashboardProps> = ({ initialDashboard }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [headerSearchQuery, setHeaderSearchQuery] = useState('');
   const [textSize, setTextSize] = useState<'small' | 'medium' | 'large'>('medium');
+  const [showMetricScreen, setShowMetricScreen] = useState(false); // Add this state
   
   // Get dashboard type from props, location state, or default to 1
   const [activeDashboard, setActiveDashboard] = useState<1 | 2 | 3>(
@@ -122,6 +124,12 @@ const Dashboard: React.FC<DashboardProps> = ({ initialDashboard }) => {
     console.log(`Text size changed to: ${size}`);
   };
 
+   // Function to handle metric icon click
+   const handleMetricIconClick = () => {
+    console.log("Dashboard: Setting showMetricScreen to true")
+    setShowMetricScreen(true)
+  }
+
   const getDashboardName = () => {
     return `Dashboard-${activeDashboard}`;
   };
@@ -142,6 +150,11 @@ const Dashboard: React.FC<DashboardProps> = ({ initialDashboard }) => {
       filterProjects(headerSearchQuery);
     }
   }, [textSize, headerSearchQuery]);
+
+     // Log when showMetricScreen changes
+     useEffect(() => {
+      console.log("Dashboard component - showMetricScreen changed to:", showMetricScreen)
+    }, [showMetricScreen])
 
   return (
     <>
@@ -167,6 +180,7 @@ const Dashboard: React.FC<DashboardProps> = ({ initialDashboard }) => {
             onNewChat={handleNewChat}
             onTextSizeChange={handleTextSizeChange}
             dashboardType={activeDashboard}
+            onMetricIconClick={handleMetricIconClick}
           />
           
           {/* Content area that expands when sidebars collapse */}
@@ -180,6 +194,8 @@ const Dashboard: React.FC<DashboardProps> = ({ initialDashboard }) => {
               textSize={textSize}
               searchQuery={searchQuery}
               headerSearchQuery={headerSearchQuery}
+              showMetricScreen={showMetricScreen}
+              setShowMetricScreen={setShowMetricScreen}
             />
           </div>
           

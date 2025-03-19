@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { PanelLeftClose, PanelLeftOpen, Search, LogOut } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface HeaderProps {
   toggleSidebar: () => void;

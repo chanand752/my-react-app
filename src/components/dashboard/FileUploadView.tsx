@@ -1,23 +1,38 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef,useEffect } from 'react';
 import { Upload, ChevronDown, ChevronUp } from 'lucide-react';
 import { TranscriptTab, UploadedFile } from './models';
+import { fetchUploadedFiles, uploadFile } from '../../services/api';
+
+
 
 interface FileUploadViewProps {
   onFileUpload: (file: UploadedFile) => void;
 }
 
 const FileUploadView = ({ onFileUpload }: FileUploadViewProps) => {
-  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([
-    { name: 'Trump_Crypto_Announcement.mp4', type: 'video/mp4', size: 1024 * 1024 * 5 },
-    { name: 'Crypto_Market_Analysis.mp3', type: 'audio/mp3', size: 1024 * 1024 * 3 },
-    { name: 'Blockchain_Documents.zip', type: 'application/zip', size: 1024 * 1024 * 10 }
-  ]);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]); // Initialize with an empty array
+
+  // const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([
+  //   { name: 'Trump_Crypto_Announcement.mp4', type: 'video/mp4', section:'transcript', size: 1024 * 1024 * 5 },
+  //   { name: 'Crypto_Market_Analysis.mp3', type: 'audio/mp3', section:'summary', size: 1024 * 1024 * 3 },
+  //   { name: 'Blockchain_Documents.zip', type: 'application/zip',section:'action items', size: 1024 * 1024 * 10 },
+  //   { name: 'TestingFile.mp3', type: 'audio/mp3', section:'open questions', size: 1024 * 1024 * 3 }
+  // ]);
   const [selectedFile, setSelectedFile] = useState<UploadedFile | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showFileSelector, setShowFileSelector] = useState(false);
   const [activeTab, setActiveTab] = useState<TranscriptTab>('transcript');
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const fetchFiles = async () => {
+      const files = await fetchUploadedFiles();
+      setUploadedFiles(files);
+    };
+    fetchFiles();
+  });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -27,13 +42,14 @@ const FileUploadView = ({ onFileUpload }: FileUploadViewProps) => {
         name: file.name,
         type: file.type,
         size: file.size,
+        section: ['transcript', 'summary', 'actionItems', 'openQuestions'], // Example sections
         url: URL.createObjectURL(file)
       };
       
       setUploadedFiles([...uploadedFiles, newFile]);
       setSelectedFile(newFile);
       setShowFileSelector(true);
-      onFileUpload(newFile);
+      // onFileUpload(newFile);
     }
   };
 
@@ -44,6 +60,27 @@ const FileUploadView = ({ onFileUpload }: FileUploadViewProps) => {
   const selectFile = (file: UploadedFile) => {
     setSelectedFile(file);
     setDropdownOpen(false);
+  };
+
+  const clearFileInput = () => {
+    fileInputRef.current.value = null;
+    setSelectedFile(null);
+    setShowFileSelector(false);
+    setIsSubmitted(false)
+  };
+
+  const handleSubmit = async () => {
+    if (selectedFile) {
+      try {
+        const file = new File([selectedFile.url], selectedFile.name, { type: selectedFile.type });
+        const response = await uploadFile(file);
+        console.log(response);
+        onFileUpload(selectedFile);
+        setIsSubmitted(true);
+      } catch (error) {
+        console.error('File upload failed', error);
+      }
+    }
   };
 
   // Example transcript content
@@ -133,6 +170,11 @@ const FileUploadView = ({ onFileUpload }: FileUploadViewProps) => {
     }
   };
 
+  // const availableTabs: TranscriptTab[] = ['transcript', 'summary', 'actionItems', 'openQuestions'].filter((tab): tab is TranscriptTab =>
+  //   uploadedFiles.some(file => file.section.includes(tab as TranscriptTab))
+  // );
+  const availableTabs: TranscriptTab[] = selectedFile ? selectedFile.section : [];
+
   return (
     <div className="flex flex-col h-full">
       <div className="p-4 border-b border-gray-200">
@@ -140,7 +182,7 @@ const FileUploadView = ({ onFileUpload }: FileUploadViewProps) => {
           className="border border-gray-300 rounded p-3 flex items-center justify-between cursor-pointer"
           onClick={triggerFileInput}
         >
-          <div className="text-gray-500">Upload files (video, audio, .zip)</div>
+          <div className="text-gray-500"> {selectedFile ? selectedFile.name : 'Upload files (video, audio, .zip)'}</div>
           <Upload size={20} className="text-gray-400" />
           <input 
             ref={fileInputRef}
@@ -150,6 +192,21 @@ const FileUploadView = ({ onFileUpload }: FileUploadViewProps) => {
             accept="video/*,audio/*,.zip"
           />
         </div>
+        <div className="mt-2 flex space-x-2">
+              <button 
+                className={`px-4 py-1 rounded ${selectedFile ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-500'}`}
+                disabled={!selectedFile}
+                onClick={handleSubmit}
+              >
+                Submit
+              </button>
+              <button 
+                className="px-4 py-1 rounded bg-red-500 text-white"
+                onClick={clearFileInput}
+              >
+                Clear
+              </button>
+            </div>
 
         {(showFileSelector || selectedFile) && (
           <div className="relative mt-3">
@@ -178,33 +235,51 @@ const FileUploadView = ({ onFileUpload }: FileUploadViewProps) => {
         )}
       </div>
 
-      {selectedFile && (
+      {/* {selectedFile && (
+        <div className="p-4 border-t border-gray-200">
+          <h3 className="text-sm font-medium">Selected File</h3>
+          <p className="text-sm mt-2"><strong>Name:</strong> {selectedFile.name}</p>
+          <p className="text-sm"><strong>Type:</strong> {selectedFile.type}</p>
+          <p className="text-sm"><strong>Size:</strong> {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB</p>
+        </div>
+      )} */}
+
+      {isSubmitted && selectedFile && (
         <>
           <div className="flex border-b border-gray-200">
+          {availableTabs.includes('transcript') && (
             <button 
               className={`px-6 py-3 font-medium text-sm ${activeTab === 'transcript' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}
               onClick={() => setActiveTab('transcript')}
             >
               Transcript
             </button>
+          )}
+
+{availableTabs.includes('summary') && (
             <button 
               className={`px-6 py-3 font-medium text-sm ${activeTab === 'summary' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}
               onClick={() => setActiveTab('summary')}
             >
               Summary
             </button>
+)}
+{availableTabs.includes('actionItems') && (
             <button 
               className={`px-6 py-3 font-medium text-sm ${activeTab === 'actionItems' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}
               onClick={() => setActiveTab('actionItems')}
             >
               Action Items
             </button>
+)}
+{availableTabs.includes('openQuestions') && (
             <button 
               className={`px-6 py-3 font-medium text-sm ${activeTab === 'openQuestions' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}
               onClick={() => setActiveTab('openQuestions')}
             >
               Open Questions
             </button>
+)}
           </div>
 
           <div className="flex-1 overflow-y-auto">

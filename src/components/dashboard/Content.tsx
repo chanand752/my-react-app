@@ -4,9 +4,10 @@ import MessageItem from './MessageItem';
 import SqlResultView from './SqlResultView';
 import ChatInput from './ChatInput';
 import FileUploadView from './FileUploadView';
+import MetricScreen from './MetricScreen';
 import { ContentProps, textSizeStyles, Message, UploadedFile } from './models';
 
-const Content = ({ dashboardType, textSize = 'medium', searchQuery, headerSearchQuery }: ContentProps) => {
+const Content = ({ dashboardType, textSize = 'medium', searchQuery, headerSearchQuery,showMetricScreen, setShowMetricScreen  }: ContentProps) => {
   const [inputValue, setInputValue] = useState('');
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -33,6 +34,11 @@ const Content = ({ dashboardType, textSize = 'medium', searchQuery, headerSearch
 
   const [filteredMessages, setFilteredMessages] = useState<Message[]>(messages);
   const [uploadedFile, setUploadedFile] = useState<UploadedFile | null>(null);
+
+     // Log when showMetricScreen changes
+     useEffect(() => {
+      console.log("Content component - showMetricScreen:", showMetricScreen)
+    }, [showMetricScreen])
 
   // Filter messages based on search query
   useEffect(() => {
@@ -127,7 +133,7 @@ const Content = ({ dashboardType, textSize = 'medium', searchQuery, headerSearch
   };
 
   // For Dashboard 2 (Transcript AI), render file upload view
-  if (dashboardType === 2) {
+  if (dashboardType === 2 && !showMetricScreen) {
     return (
       <div className="flex-1 flex flex-col h-full overflow-hidden">
         <div className="flex-1 overflow-y-auto">
@@ -135,6 +141,20 @@ const Content = ({ dashboardType, textSize = 'medium', searchQuery, headerSearch
         </div>
       </div>
     );
+  }
+
+  // If metric screen is active, show only the metric screen
+  if (showMetricScreen) {
+    console.log("Rendering MetricScreen")
+    return (
+      <div className="flex-1 flex flex-col h-full overflow-hidden">
+        <div className="max-w-4xl mx-auto w-full flex flex-col h-full pt-4">
+          <div className="flex-1 overflow-y-auto px-4 hover-scrollbar">
+            <MetricScreen onClose={() => setShowMetricScreen(false)} />
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (

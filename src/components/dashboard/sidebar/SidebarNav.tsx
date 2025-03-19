@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MessageSquare, Folder, Type, Clipboard } from 'lucide-react';
+import { MessageSquare, Folder, Type, Clipboard,BarChart2 } from 'lucide-react';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
@@ -9,7 +9,15 @@ import { SidebarNavProps } from './types';
 const SidebarNav: React.FC<SidebarNavProps & {
   textSize: 'small' | 'medium' | 'large';
   handleTextSizeChange: (size: 'small' | 'medium' | 'large') => void;
-}> = ({ textSize, handleTextSizeChange }) => {
+}> = ({ textSize, handleTextSizeChange, onMetricIconClick }) => {
+  const handleMetricClick = () => {
+    console.log("SidebarNav: Metric icon clicked")
+    if (typeof onMetricIconClick === "function") {
+      onMetricIconClick()
+    } else {
+      console.error("onMetricIconClick is not a function", onMetricIconClick)
+    }
+  }
   return (
     <div className="w-16 bg-white border-r border-gray-200 flex flex-col items-center py-4 justify-between h-full">
       <div className="flex flex-col items-center">
@@ -59,6 +67,12 @@ const SidebarNav: React.FC<SidebarNavProps & {
           </Dialog>
           <button className="w-10 h-10 rounded-md flex items-center justify-center hover:bg-gray-100 text-gray-500">
             <Clipboard size={20} />
+          </button>
+          <button 
+            className="w-10 h-10 rounded-md flex items-center justify-center hover:bg-gray-100 text-gray-500"
+            onClick={handleMetricClick}
+          >
+            <BarChart2 size={20} />
           </button>
         </nav>
       </div>

@@ -23,7 +23,10 @@ export interface Project {
 }
 
 export interface SidebarNavProps {
-  activeDashboard: 1 | 2 | 3;
+  activeDashboard: 1 | 2 | 3; 
+  textSize: 'small' | 'medium' | 'large';
+  handleTextSizeChange: (size: 'small' | 'medium' | 'large') => void;
+  onMetricIconClick: () => void;
 }
 
 export interface SidebarProps {

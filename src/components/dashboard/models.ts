@@ -3,6 +3,8 @@ export interface ContentProps {
   textSize?: 'small' | 'medium' | 'large';
   searchQuery?: string;
   headerSearchQuery?: string;
+  showMetricScreen: boolean
+  setShowMetricScreen: (show: boolean) => void
 }
 
 export interface Message {
@@ -44,6 +46,7 @@ export interface UploadedFile {
   name: string;
   type: string;
   size: number;
+  section: TranscriptTab[]
   url?: string;
 }
 

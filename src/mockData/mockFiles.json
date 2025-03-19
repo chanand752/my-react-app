@@ -1,0 +1,6 @@
+[
+    { "name": "Trump_Crypto_Announcement.mp4", "type": "video/mp4", "section": ["transcript", "summary", "actionItems", "openQuestions"], "size": 5242880, "url": "" },
+    { "name": "Crypto_Market_Analysis.mp3", "type": "audio/mp3", "section": ["summary", "actionItems"], "size": 3145728, "url": "" },
+    { "name": "Blockchain_Documents.zip", "type": "application/zip", "section": ["actionItems"], "size": 10485760, "url": "" },
+    { "name": "TestingFile.mp3", "type": "audio/mp3", "section": ["openQuestions"], "size": 3145728, "url": "" }
+  ]

@@ -1,5 +1,5 @@
 
-import { Meeting, Project, ChatTopic } from '@/components/dashboard/models';
+import { Meeting, Project, ChatTopic, UploadedFile } from '../components/dashboard/models';
 
 // Mock API functions to fetch data
 export async function fetchMeetings(): Promise<Meeting[]> {
@@ -34,3 +34,22 @@ export async function fetchChatTopics(): Promise<ChatTopic[]> {
     return [];
   }
 }
+
+export async function fetchUploadedFiles(): Promise<UploadedFile[]> {
+  try {
+    const response = await fetch('/src/mockData/mockFiles.json');
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching uploaded files:', error);
+    return [];
+  }
+}
+
+export const uploadFile = async (file: File) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ success: true, message: 'File uploaded successfully' });
+    }, 1000);
+  });
+};
