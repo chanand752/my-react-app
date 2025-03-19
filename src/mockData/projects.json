@@ -1,0 +1,21 @@
+
+[
+  {
+    "id": "1",
+    "name": "Project1",
+    "chats": ["Chat1", "Chat2", "Chat3"],
+    "expanded": true
+  },
+  {
+    "id": "2",
+    "name": "Project2",
+    "chats": ["ChatA", "ChatB"],
+    "expanded": false
+  },
+  {
+    "id": "3",
+    "name": "Project3",
+    "chats": [],
+    "expanded": false
+  }
+]

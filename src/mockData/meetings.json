@@ -1,0 +1,25 @@
+
+[
+  {
+    "id": "1",
+    "name": "Meeting1",
+    "items": [
+      { "name": "Transcript", "type": "transcript" },
+      { "name": "Summary", "type": "summary" },
+      { "name": "Action Items", "type": "action" },
+      { "name": "Open Questions", "type": "question" }
+    ],
+    "expanded": true
+  },
+  {
+    "id": "2",
+    "name": "Meeting2",
+    "items": [
+      { "name": "Transcript", "type": "transcript" },
+      { "name": "Summary", "type": "summary" },
+      { "name": "Action Items", "type": "action" },
+      { "name": "Open Questions", "type": "question" }
+    ],
+    "expanded": false
+  }
+]

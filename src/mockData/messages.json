@@ -1,0 +1,23 @@
+
+[
+  {
+    "type": "query",
+    "content": "What happened with Trump's crypto announcement?",
+    "minimized": false
+  },
+  {
+    "type": "response",
+    "content": "President Trump announced plans to establish a U.S. Crypto Strategic Reserve, causing a brief surge in cryptocurrency prices. The proposed reserve will include Bitcoin, Ethereum, XRP, Solana, and Cardano.",
+    "minimized": false
+  },
+  {
+    "type": "query",
+    "content": "How did the market react?",
+    "minimized": false
+  },
+  {
+    "type": "response",
+    "content": "Bitcoin climbed to approximately $90,000-$95,000, rebounding from a recent dip below $80,000. XRP, Solana, and Cardano experienced even more substantial gains, with Cardano's ADA surging over 60%.",
+    "minimized": false
+  }
+]
